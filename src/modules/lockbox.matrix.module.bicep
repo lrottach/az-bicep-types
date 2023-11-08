@@ -18,23 +18,19 @@ param storageName string
 @allowed([ 'Premium_LRS', 'Standard_LRS' ])
 param storageSku string
 
-@allowed([ 'StorageV2' ])
+@allowed([ 'StorageV2', 'FileStorage', 'BlobStorage' ])
 param storageKind string
 
 @allowed([ 'TLS1_2' ])
 param minimumTlsVersion string
 
 @allowed([ 'Enabled', 'Disabled' ])
-param largeFileShareState string
+param publicNetworkAccess string
 
-param shareName string
-@allowed([ 'Hot', 'Cool', 'TransactionOptimized' ])
 
-param shareAccessTier string
-
-//
+// ----------------------------
 // Resources
-//
+// ----------------------------
 
 // Azure Storage Account
 resource storage 'Microsoft.Storage/storageAccounts@2023-01-01' = {
@@ -46,19 +42,6 @@ resource storage 'Microsoft.Storage/storageAccounts@2023-01-01' = {
   kind: storageKind
   properties: {
     minimumTlsVersion: minimumTlsVersion
-    largeFileSharesState: largeFileShareState
-  }
-}
-
-resource fileServices 'Microsoft.Storage/storageAccounts/fileServices@2023-01-01' = {
-  name: 'default'
-  parent: storage
-}
-
-resource share 'Microsoft.Storage/storageAccounts/fileServices/shares@2023-01-01' = {
-  name: shareName
-  parent: fileServices
-  properties: {
-    accessTier: shareAccessTier
+   publicNetworkAccess: publicNetworkAccess
   }
 }

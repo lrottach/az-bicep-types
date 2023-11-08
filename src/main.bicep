@@ -14,9 +14,10 @@ targetScope = 'subscription'
 // ----------------------------
 
 @allowed(['westeurope', 'switzerlandnorth'])
-param deploymentLocation string
+param deploymentLocation string = 'westeurope'
 
-param rgName string
+@description('Name of the resource group to create')
+param rgName string = 'rg-demo-types1-we'
 
 // ----------------------------
 // Resource
@@ -31,17 +32,15 @@ resource rg 'Microsoft.Resources/resourceGroups@2023-07-01' = {
 // Modules
 // ----------------------------
 
-module storageSolution './modules/Microsoft.Storage/storage.module.bicep' = {
+module storageSolution './modules/lockbox.matrix.module.bicep' = {
   scope: rg
   name: 'depoy-demo-storage'
   params: {
     deploymentLocation: deploymentLocation
-    largeFileShareState: 'Enabled'
     minimumTlsVersion: 'TLS1_2'
-    shareAccessTier: 'Cool'
-    shareName: 'share1'
     storageKind: 'StorageV2'
-    storageName: 'storage1dcodemo200'
-    storageSku: 'Standard_LRS'
+    storageName: 'stodemotypes1we'
+    storageSku: 'Standard_LRS' 
+    publicNetworkAccess: 'Enabled'
   }
 }
